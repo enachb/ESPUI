@@ -381,7 +381,7 @@ void ESPUIClass::onWsEvent(AsyncWebSocket* server, AsyncWebSocketClient* client,
     if(WS_EVT_DISCONNECT == type)
     {
         #if defined(DEBUG_ESPUI)
-            // if (verbosity)
+            if (verbosity)
             {
                 Serial.println(F("WS_EVT_DISCONNECT"));
             }
