@@ -314,15 +314,22 @@ uint32_t ESPUIclient::prepareJSONChunk(uint16_t startindex,
                 // String("prepareJSONChunk: too much data in the message. Remove the last entry");
                 if (0 == elementcount)
                 {
-                    Serial.println(String(F("ERROR: prepareJSONChunk: Control ")) + String(control->id) + F(" is too large to be sent to the browser. Aborting update"));
+                    // Serial.println(String(F("ERROR: prepareJSONChunk: Control ")) + String(control->id) + F(" is too large to be sent to the browser."));
+                    items.remove(elementcount);
+                    item = items.createNestedObject();
+                    control->MarshalErrorMessage(item);
+                    control = control->next;
                 }
-                // Serial.println(String("prepareJSONChunk: Defering control: ") + String(control->id));
-                // Serial.println(String("prepareJSONChunk: elementcount: ") + String(elementcount));
+                else
+                {
+                    // Serial.println(String("prepareJSONChunk: Defering control: ") + String(control->id));
+                    // Serial.println(String("prepareJSONChunk: elementcount: ") + String(elementcount));
 
-                items.remove(elementcount);
-                --elementcount;
-                // exit the loop
-                control = nullptr;
+                    items.remove(elementcount);
+                    --elementcount;
+                    // exit the loop
+                    control = nullptr;
+                }
             }
             else
             {
