@@ -83,6 +83,7 @@ public:
     void SendCallback(int type);
     bool HasCallback() { return ((nullptr != callback) || (nullptr != extendedCallback)); }
     void MarshalControl(ArduinoJson::JsonObject& item, bool refresh);
+    void MarshalErrorMessage(ArduinoJson::JsonObject& item);
     bool ToBeDeleted() { return (ControlSyncState_t::deleted == ControlSyncState); }
     void DeleteControl();
     bool IsUpdated() { return ControlSyncState_t::synchronized != ControlSyncState; }

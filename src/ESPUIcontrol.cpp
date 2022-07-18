@@ -1,28 +1,23 @@
 #include "ESPUI.h"
 
 static uint16_t idCounter = 0;
+static const String ControlError = "*** ESPUI ERROR: Could not transfer control ***";
 
-Control::Control(ControlType type, 
-                 const char* label, 
-                 void (*callback)(Control*, int, void*), 
-                 void* UserData,
-                 const String& value, 
-                 ControlColor color, 
-                 bool visible, 
-                 uint16_t parentControl)
+Control::Control(ControlType type, const char* label, void (*callback)(Control*, int, void*), void* UserData,
+    const String& value, ControlColor color, bool visible, uint16_t parentControl)
     : type(type),
-        label(label),
-        callback(nullptr),
-        extendedCallback(callback),
-        user(UserData),
-        value(value),
-        color(color),
-        visible(visible),
-        wide(false),
-        vertical(false),
-        enabled(true),
-        parentControl(parentControl),
-        next(nullptr)
+      label(label),
+      callback(nullptr),
+      extendedCallback(callback),
+      user(UserData),
+      value(value),
+      color(color),
+      visible(visible),
+      wide(false),
+      vertical(false),
+      enabled(true),
+      parentControl(parentControl),
+      next(nullptr)
 {
     id = ++idCounter;
 }
@@ -63,6 +58,7 @@ void Control::DeleteControl()
 
 void Control::MarshalControl(JsonObject & item, bool refresh)
 {
+    item[F("id")]      = id;
     if(refresh)
     {
         item[F("type")] = uint32_t(type) + uint32_t(ControlType::UpdateOffset);
@@ -73,7 +69,6 @@ void Control::MarshalControl(JsonObject & item, bool refresh)
     }
     item[F("label")]   = label;
     item[F("value")]   = value;
-    item[F("id")]      = id;
     item[F("visible")] = visible;
     item[F("color")]   = (int)color;
     item[F("enabled")] = enabled;
@@ -105,6 +100,22 @@ void Control::MarshalControl(JsonObject & item, bool refresh)
         {
             item[F("selected")] = "";
         }
+    }
+}
+
+void Control::MarshalErrorMessage(JsonObject & item)
+{
+    item[F("id")]      = id;
+    item[F("type")]    = uint32_t(ControlType::Label);
+    item[F("label")]   = ControlError.c_str();
+    item[F("value")]   = ControlError;
+    item[F("visible")] = true;
+    item[F("color")]   = (int)ControlColor::Carrot;
+    item[F("enabled")] = true;
+
+    if (parentControl != Control::noParent)
+    {
+        item[F("parentControl")] = String(parentControl);
     }
 }
 
