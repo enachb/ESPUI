@@ -643,6 +643,11 @@ Graph points are saved in the browser in **localstorage** to be persistant, clea
 
 _There are many issues with the graph component currently and work is ongoing. Consider helping us out with development!_
 
+### Common Control Errors
+
+It is possible to on occasion create a control that exceeds the ESPUIs ability to transfer the control to the browser. This will be indicated on the UI by converting the control to a label, setting the label control color to carrot and setting the control label and the control value to `*** ESPUI ERROR: Could not transfer control ***`. There are multiple ways to adress this error: Decrease the aggregate length of the data attached to the control or increase the size of the transfer buffer by increasing the jsonUpdateDocumentSize and jsonInitialDocumentSize values. This condition is also sometimes caused by an incorrect pointer in the label field that points to a stack element that is no longer in scope and therefore contains random data of unknown length.
+
+
 # Notes for Development
 
 If you want to work on the HTML/CSS/JS files, do make changes in the _data_
