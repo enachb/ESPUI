@@ -315,10 +315,10 @@ uint32_t ESPUIclient::prepareJSONChunk(uint16_t startindex,
                 if (1 == elementcount)
                 {
                     // Serial.println(String(F("ERROR: prepareJSONChunk: Control ")) + String(control->id) + F(" is too large to be sent to the browser."));
-                    items.remove(elementcount);
+                    rootDoc.clear();
                     item = items.createNestedObject();
                     control->MarshalErrorMessage(item);
-                    control = control->next;
+                    elementcount = 0;
                 }
                 else
                 {
@@ -327,9 +327,10 @@ uint32_t ESPUIclient::prepareJSONChunk(uint16_t startindex,
 
                     items.remove(elementcount);
                     --elementcount;
-                    // exit the loop
-                    control = nullptr;
                 }
+                // exit the loop
+                control = nullptr;
+
             }
             else
             {
@@ -454,6 +455,8 @@ bool ESPUIclient::SendJsonDocToWebSocket(DynamicJsonDocument& document)
         }
 
         String json;
+        json.reserve(document.size() / 2);
+        json.clear();
         serializeJson(document, json);
 
         #if defined(DEBUG_ESPUI)
