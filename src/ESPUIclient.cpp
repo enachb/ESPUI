@@ -314,7 +314,7 @@ uint32_t ESPUIclient::prepareJSONChunk(uint16_t startindex,
                 // String("prepareJSONChunk: too much data in the message. Remove the last entry");
                 if (1 == elementcount)
                 {
-                    // Serial.println(String(F("ERROR: prepareJSONChunk: Control ")) + String(control->id) + F(" is too large to be sent to the browser."));
+                    Serial.println(String(F("ERROR: prepareJSONChunk: Control ")) + String(control->id) + F(" is too large to be sent to the browser."));
                     rootDoc.clear();
                     item = items.createNestedObject();
                     control->MarshalErrorMessage(item);
