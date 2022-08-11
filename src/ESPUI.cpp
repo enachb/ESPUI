@@ -804,6 +804,26 @@ void ESPUIClass::updateControlValue(uint16_t id, const String& value, int client
     updateControlValue(control, value, clientId);
 }
 
+void ESPUIClass::updateControlLabel(uint16_t id, const char * value, int clientId)
+{
+    updateControlLabel(getControl(id), value, clientId);
+}
+
+void ESPUIClass::updateControlLabel(Control* control, const char * value, int clientId)
+{
+    if (!control)
+    {
+#if defined(DEBUG_ESPUI)
+        if (verbosity)
+        {
+            Serial.printf_P(PSTR("Error: updateControlLabel Control: There is no control with the requested ID \n"));
+        }
+#endif
+        return;
+    }
+    control->label = value;
+    updateControl(control, clientId);
+}
 void ESPUIClass::updateVisibility(uint16_t id, bool visibility, int clientId) {
     Control* control = getControl(id);
     if(control)

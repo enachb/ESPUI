@@ -163,6 +163,9 @@ public:
     void updateControlValue(uint16_t id, const String& value, int clientId = -1);
     void updateControlValue(Control* control, const String& value, int clientId = -1);
 
+    void updateControlLabel(uint16_t control, const char * value, int clientId = -1);
+    void updateControlLabel(Control* control, const char * value, int clientId = -1);
+
     void updateControl(uint16_t id, int clientId = -1);
     void updateControl(Control* control, int clientId = -1);
 
