@@ -13,7 +13,7 @@
 #include "dataTabbedcontentJS.h"
 #include "dataZeptoJS.h"
 
-// ################# LITTLEFS functions
+// ################# LittleFS functions
 #if defined(ESP32)
 void listDir(const char* dirname, uint8_t levels)
 {
@@ -25,7 +25,7 @@ void listDir(const char* dirname, uint8_t levels)
 #endif
 
 #if defined(ESP32)
-    File root = LITTLEFS.open(dirname);
+    File root = LittleFS.open(dirname);
 #else
     File root = LittleFS.open(dirname);
 #endif
@@ -113,9 +113,9 @@ void listDir(const char* dirname, uint8_t levels)
 void ESPUIClass::list()
 {
 #if defined(ESP32)
-    if (!LITTLEFS.begin())
+    if (!LittleFS.begin())
     {
-        Serial.println(F("LITTLEFS Mount Failed"));
+        Serial.println(F("LittleFS Mount Failed"));
         return;
     }
 #else
@@ -129,8 +129,8 @@ void ESPUIClass::list()
     listDir("/", 1);
 #if defined(ESP32)
 
-    Serial.println(LITTLEFS.totalBytes());
-    Serial.println(LITTLEFS.usedBytes());
+    Serial.println(LittleFS.totalBytes());
+    Serial.println(LittleFS.usedBytes());
 
 #else
     FSInfo fs_info;
@@ -145,7 +145,7 @@ void ESPUIClass::list()
 void deleteFile(const char* path)
 {
 #if defined(ESP32)
-    bool exists = LITTLEFS.exists(path);
+    bool exists = LittleFS.exists(path);
 #else
     bool exists = LittleFS.exists(path);
 #endif
@@ -170,7 +170,7 @@ void deleteFile(const char* path)
 #endif
 
 #if defined(ESP32)
-    bool didRemove = LITTLEFS.remove(path);
+    bool didRemove = LittleFS.remove(path);
 #else
     bool didRemove = LittleFS.remove(path);
 #endif
@@ -204,7 +204,7 @@ void writeFile(const char* path, const char* data)
 #endif
 
 #if defined(ESP32)
-    File file = LITTLEFS.open(path, FILE_WRITE);
+    File file = LittleFS.open(path, FILE_WRITE);
 #else
     File file = LittleFS.open(path, FILE_WRITE);
 #endif
@@ -267,7 +267,7 @@ void writeFile(const char* path, const char* data)
     file.close();
 }
 
-// end LITTLEFS functions
+// end LittleFS functions
 
 void ESPUIClass::prepareFileSystem()
 {
@@ -281,14 +281,14 @@ void ESPUIClass::prepareFileSystem()
 #endif
 
 #if defined(ESP32)
-    LITTLEFS.format();
+    LittleFS.format();
 
-    if (!LITTLEFS.begin(true))
+    if (!LittleFS.begin(true))
     {
 #if defined(DEBUG_ESPUI)
         if (verbosity)
         {
-            Serial.println(F("LITTLEFS Mount Failed"));
+            Serial.println(F("LittleFS Mount Failed"));
         }
 #endif
 
@@ -299,7 +299,7 @@ void ESPUIClass::prepareFileSystem()
     if (verbosity)
     {
         listDir("/", 1);
-        Serial.println(F("LITTLEFS Mount ESP32 Done"));
+        Serial.println(F("LittleFS Mount ESP32 Done"));
     }
 #endif
 
@@ -310,7 +310,7 @@ void ESPUIClass::prepareFileSystem()
 #if defined(DEBUG_ESPUI)
     if (verbosity)
     {
-        Serial.println(F("LITTLEFS Mount ESP8266 Done"));
+        Serial.println(F("LittleFS Mount ESP8266 Done"));
     }
 #endif
 
@@ -366,7 +366,7 @@ void ESPUIClass::prepareFileSystem()
 #endif
 
 #if defined(ESP32)
-    LITTLEFS.end();
+    LittleFS.end();
 #else
     LittleFS.end();
 #endif
@@ -973,10 +973,10 @@ void ESPUIClass::jsonReload()
 void ESPUIClass::beginSPIFFS(const char* _title, const char* username, const char* password, uint16_t port)
 {
     // Backwards compatibility wrapper
-    beginLITTLEFS(_title, username, password, port);
+    beginLittleFS(_title, username, password, port);
 }
 
-void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const char* password, uint16_t port)
+void ESPUIClass::beginLittleFS(const char* _title, const char* username, const char* password, uint16_t port)
 {
     ui_title = _title;
     basicAuthUsername = username;
@@ -995,7 +995,7 @@ void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const c
     ws = new AsyncWebSocket("/ws");
 
 #if defined(ESP32)
-    bool fsBegin = LITTLEFS.begin();
+    bool fsBegin = LittleFS.begin();
 #else
     bool fsBegin = LittleFS.begin();
 #endif
@@ -1004,7 +1004,7 @@ void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const c
 #if defined(DEBUG_ESPUI)
         if (verbosity)
         {
-            Serial.println(F("LITTLEFS Mount Failed, PLEASE CHECK THE README ON HOW TO "
+            Serial.println(F("LittleFS Mount Failed, PLEASE CHECK THE README ON HOW TO "
                              "PREPARE YOUR ESP!!!!!!!"));
         }
 #endif
@@ -1020,7 +1020,7 @@ void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const c
 #endif
 
 #if defined(ESP32)
-    bool indexExists = LITTLEFS.exists("/index.htm");
+    bool indexExists = LittleFS.exists("/index.htm");
 #else
     bool indexExists = LittleFS.exists("/index.htm");
 #endif
@@ -1050,7 +1050,7 @@ void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const c
             ws->setAuthentication(basicAuthUsername, basicAuthPassword);
         }
 #if defined(ESP32)
-        server->serveStatic("/", LITTLEFS, "/").setDefaultFile("index.htm").setAuthentication(username, password);
+        server->serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(username, password);
 #else
         server->serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(username, password);
 #endif
@@ -1058,7 +1058,7 @@ void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const c
     else
     {
 #if defined(ESP32)
-        server->serveStatic("/", LITTLEFS, "/").setDefaultFile("index.htm");
+        server->serveStatic("/", LittleFS, "/").setDefaultFile("index.htm");
 #else
         server->serveStatic("/", LittleFS, "/").setDefaultFile("index.htm");
 #endif
@@ -1071,7 +1071,7 @@ void ESPUIClass::beginLITTLEFS(const char* _title, const char* username, const c
             return request->requestAuthentication();
         }
 
-        request->send(200, "text/plain", String(ESP.getFreeHeap()) + " In LITTLEFS mode");
+        request->send(200, "text/plain", String(ESP.getFreeHeap()) + " In LittleFS mode");
     });
 
     server->onNotFound([](AsyncWebServerRequest* request) { request->send(404); });
